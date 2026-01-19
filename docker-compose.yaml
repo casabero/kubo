@@ -33,6 +33,7 @@ services:
       dockerfile: Dockerfile
     labels:
       - "coolify.fqdn=https://kubo.casabero.com"
+      - "coolify.port=80"
     depends_on:
       - backend
     networks:
