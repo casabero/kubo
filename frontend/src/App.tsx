@@ -1,12 +1,30 @@
+import { useState, useEffect } from 'react'
 import Button from './components/Button'
 import Card from './components/Card'
 import Input from './components/Input'
+import { apiClient } from './api'
 
 function App() {
+    const [backendStatus, setBackendStatus] = useState<'checking' | 'online' | 'offline'>('checking');
+
+    useEffect(() => {
+        apiClient.get('/health')
+            .then(() => setBackendStatus('online'))
+            .catch(() => setBackendStatus('offline'));
+    }, []);
+
     return (
         <div className="min-h-screen p-12 max-w-4xl mx-auto space-y-12">
             <header className="space-y-2">
-                <h1 className="text-4xl font-bold tracking-tight">KuboApps</h1>
+                <div className="flex justify-between items-center">
+                    <h1 className="text-4xl font-bold tracking-tight">KuboApps</h1>
+                    <span className={`text-[10px] px-2 py-1 border ${backendStatus === 'online' ? 'border-green-500 text-green-500' :
+                            backendStatus === 'offline' ? 'border-red-500 text-red-500' :
+                                'border-sti-border text-sti-text opacity-40'
+                        }`}>
+                        API: {backendStatus.toUpperCase()}
+                    </span>
+                </div>
                 <p className="text-sti-text opacity-60">Technical Minimalist Dashboard</p>
             </header>
 
