@@ -1,0 +1,188 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+}
+
+enum NoteCategory {
+  ACADEMIC
+  BEHAVIORAL
+}
+
+enum AssessmentType {
+  WORKSHOP
+  QUIZ
+  EXAM
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      Role     @default(STUDENT)
+  firstName String?
+  lastName  String?
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  enrollments      Enrollment[]
+  teachingCourses   Course[]         @relation("TeacherCourses")
+  attendanceRecords Attendance[]
+  notes             Note[]
+  assessmentSessions AssessmentSession[]
+  skillMasteries    StudentSkillMastery[]
+}
+
+model Course {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  teacherId   String
+  teacher     User     @relation("TeacherCourses", fields: [teacherId], references: [id])
+  createdAt   DateTime @default(now())
+  
+  groups      Group[]
+}
+
+model Group {
+  id        String   @id @default(uuid())
+  name      String
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id])
+  
+  enrollments Enrollment[]
+}
+
+model Enrollment {
+  id        String   @id @default(uuid())
+  studentId String
+  student   User     @relation(fields: [studentId], references: [id])
+  groupId   String
+  group     Group    @relation(fields: [groupId], references: [id])
+  enrolledAt DateTime @default(now())
+
+  @@unique([studentId, groupId])
+}
+
+model Attendance {
+  id        String           @id @default(uuid())
+  date      DateTime         @default(now())
+  status    AttendanceStatus
+  studentId String
+  student   User             @relation(fields: [studentId], references: [id])
+}
+
+model Note {
+  id               String       @id @default(uuid())
+  content          String
+  audioUrl         String?
+  isVoiceGenerated Boolean      @default(false)
+  category         NoteCategory @default(ACADEMIC)
+  authorId         String
+  author           User         @relation(fields: [authorId], references: [id])
+  createdAt        DateTime     @default(now())
+}
+
+model Skill {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  
+  questions      Question[]
+  misconceptions Misconception[]
+  masteries      StudentSkillMastery[]
+}
+
+model Misconception {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+  skillId     String
+  skill       Skill   @relation(fields: [skillId], references: [id])
+}
+
+model Assessment {
+  id         String         @id @default(uuid())
+  name       String
+  type       AssessmentType
+  isAdaptive Boolean        @default(false)
+  
+  questions AssessmentQuestion[]
+  sessions  AssessmentSession[]
+}
+
+model Question {
+  id                 String  @id @default(uuid())
+  content            String
+  type               String  // e.g., MULTIPLE_CHOICE, OPEN
+  options            Json?   // JSON for options
+  irtDifficulty      Float   @default(0.0)
+  irtDiscrimination Float   @default(1.0)
+  skillId            String
+  skill              Skill   @relation(fields: [skillId], references: [id])
+
+  assessments        AssessmentQuestion[]
+  responses          Response[]
+}
+
+model AssessmentQuestion {
+  assessmentId String
+  questionId   String
+  assessment   Assessment @relation(fields: [assessmentId], references: [id])
+  question     Question   @relation(fields: [questionId], references: [id])
+
+  @@id([assessmentId, questionId])
+}
+
+model AssessmentSession {
+  id               String     @id @default(uuid())
+  startTime        DateTime   @default(now())
+  endTime          DateTime?
+  estimatedAbility Float      @default(0.0) // theta (IRT)
+  studentId        String
+  student          User       @relation(fields: [studentId], references: [id])
+  assessmentId     String
+  assessment       Assessment @relation(fields: [assessmentId], references: [id])
+
+  responses Response[]
+}
+
+model Response {
+  id        String   @id @default(uuid())
+  isCorrect Boolean
+  timeSpent Int      // in seconds
+  hintsUsed Int      @default(0)
+  sessionId String
+  session   AssessmentSession @relation(fields: [sessionId], references: [id])
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id])
+}
+
+model StudentSkillMastery {
+  id                 String   @id @default(uuid())
+  studentId          String
+  student            User     @relation(fields: [studentId], references: [id])
+  skillId            String
+  skill              Skill    @relation(fields: [skillId], references: [id])
+  masteryProbability Float    @default(0.0) // BKT mastery probability
+  nextReview         DateTime // SM2 next review date
+  
+  @@unique([studentId, skillId])
+}
