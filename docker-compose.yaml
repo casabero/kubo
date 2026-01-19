@@ -15,6 +15,10 @@ services:
     labels:
       - "coolify.fqdn=https://api.kubo.casabero.com"
       - "coolify.port=3000"
+      - "traefik.enable=true"
+      - "traefik.http.routers.kubo-backend.rule=Host(`api.kubo.casabero.com`)"
+      - "traefik.http.routers.kubo-backend.entrypoints=websecure"
+      - "traefik.http.routers.kubo-backend.tls=true"
 
   db:
     image: postgres:15-alpine
@@ -45,6 +49,10 @@ services:
     labels:
       - "coolify.fqdn=https://kubo.casabero.com"
       - "coolify.port=80"
+      - "traefik.enable=true"
+      - "traefik.http.routers.kubo-frontend.rule=Host(`kubo.casabero.com`)"
+      - "traefik.http.routers.kubo-frontend.entrypoints=websecure"
+      - "traefik.http.routers.kubo-frontend.tls=true"
 
 networks:
   kubo-network:
