@@ -7,7 +7,7 @@ function App() {
         <div className="min-h-screen p-12 max-w-4xl mx-auto space-y-12">
             <header className="space-y-2">
                 <h1 className="text-4xl font-bold tracking-tight">KuboApps</h1>
-                <p className="text-STI-text opacity-60">Technical Minimalist Dashboard</p>
+                <p className="text-sti-text opacity-60">Technical Minimalist Dashboard</p>
             </header>
 
             <main className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -36,7 +36,7 @@ function App() {
                 </Card>
             </main>
 
-            <footer className="pt-12 border-t border-STI-border text-[10px] uppercase tracking-widest opacity-40">
+            <footer className="pt-12 border-t border-sti-border text-[10px] uppercase tracking-widest opacity-40">
                 © 2026 KuboApps // Technical Minimalist v1.0
             </footer>
         </div>
