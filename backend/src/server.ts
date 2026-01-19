@@ -14,6 +14,11 @@ app.use(cookieParser());
 // Auth routes
 app.use('/auth', authRoutes);
 
+// Identify backend
+app.get('/', (req: Request, res: Response) => {
+    res.send('Kubo API Backend - Online');
+});
+
 // Healthcheck endpoint
 app.get('/health', (req: Request, res: Response) => {
     res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
