@@ -4,8 +4,6 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     restart: always
-    ports:
-      - "3000:3000"
     environment:
       - PORT=3000
       - DATABASE_URL=postgresql://kubouser:kubopass@db:5432/kubodb?schema=public
@@ -14,6 +12,9 @@ services:
         condition: service_healthy
     networks:
       - kubo-network
+    labels:
+      - "coolify.fqdn=https://api.kubo.casabero.com"
+      - "coolify.port=3000"
 
   db:
     image: postgres:15-alpine
@@ -22,15 +23,13 @@ services:
       - POSTGRES_USER=kubouser
       - POSTGRES_PASSWORD=kubopass
       - POSTGRES_DB=kubodb
-    ports:
-      - "5432:5432"
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U kubouser -d kubodb" ]
       interval: 5s
       timeout: 5s
       retries: 5
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - /home/casabero/data/kubo/postgres:/var/lib/postgresql/data
     networks:
       - kubo-network
 
@@ -39,17 +38,14 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     restart: always
-    labels:
-      - "coolify.fqdn=https://kubo.casabero.com"
-      - "coolify.port=80"
     depends_on:
       - backend
     networks:
       - kubo-network
+    labels:
+      - "coolify.fqdn=https://kubo.casabero.com"
+      - "coolify.port=80"
 
 networks:
   kubo-network:
     driver: bridge
-
-volumes:
-  postgres_data:
