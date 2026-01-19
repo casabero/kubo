@@ -35,6 +35,7 @@ COPY --from=builder --chown=1000:1000 /app/dist ./dist
 COPY --from=builder --chown=1000:1000 /app/package*.json ./
 RUN npm install --only=production
 COPY --from=builder --chown=1000:1000 /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder --chown=1000:1000 /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder --chown=1000:1000 /app/prisma ./prisma
 
 EXPOSE 3000
