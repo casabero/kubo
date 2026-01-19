@@ -12,10 +12,10 @@ services:
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "80:80"
+      context: .
+      dockerfile: ./frontend/Dockerfile
+    labels:
+      - "coolify.fqdn=https://kubo.casabero.com"
     depends_on:
       - backend
     networks:
