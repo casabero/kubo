@@ -36,6 +36,6 @@ app.post('/calculate', (req: Request, res: Response) => {
     }
 });
 
-app.listen(port, () => {
-    logger.info(`Backend server running at http://localhost:${port}`);
+app.listen(Number(port), '0.0.0.0', () => {
+    logger.info(`Backend server running at http://0.0.0.0:${port}`);
 });
