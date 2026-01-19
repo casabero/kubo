@@ -1,5 +1,5 @@
 import { PrismaClient, Role } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { generateAccessToken, generateRefreshToken } from '../utils/jwt.utils';
 
 const prisma = new PrismaClient();
