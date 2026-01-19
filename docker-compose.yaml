@@ -12,8 +12,8 @@ services:
 
   frontend:
     build:
-      context: .
-      dockerfile: ./frontend/Dockerfile
+      context: ./frontend
+      dockerfile: Dockerfile
     labels:
       - "coolify.fqdn=https://kubo.casabero.com"
     depends_on:
