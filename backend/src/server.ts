@@ -1,12 +1,18 @@
 import express, { Request, Response } from 'express';
+import cookieParser from 'cookie-parser';
 import logger from './logger';
 import { z } from 'zod';
 import * as math from 'mathjs';
+import authRoutes from './routes/auth.routes';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(cookieParser());
+
+// Auth routes
+app.use('/auth', authRoutes);
 
 // Healthcheck endpoint
 app.get('/health', (req: Request, res: Response) => {
