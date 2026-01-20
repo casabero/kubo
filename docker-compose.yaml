@@ -1,27 +1,20 @@
 services:
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+  db:
+    image: postgres:15-alpine
     restart: always
-    depends_on:
-      - backend
+    environment:
+      - POSTGRES_USER=kubouser
+      - POSTGRES_PASSWORD=kubopass
+      - POSTGRES_DB=kubodb
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U kubouser -d kubodb" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - /home/casabero/data/kubo/postgres:/var/lib/postgresql/data
     networks:
       - kubo-network
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:80/" ]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 5s
-    labels:
-      - "coolify.fqdn=https://kubo.casabero.com"
-      - "coolify.port=80"
-      - "traefik.enable=true"
-      - "traefik.http.routers.kubo-frontend.rule=Host(`kubo.casabero.com`)"
-      - "traefik.http.routers.kubo-frontend.entrypoints=websecure"
-      - "traefik.http.routers.kubo-frontend.tls=true"
-      - "traefik.http.routers.kubo-frontend.tls.certresolver=letsencrypt"
 
   backend:
     build:
@@ -41,32 +34,27 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-      start_period: 10s
     labels:
       - "coolify.fqdn=https://api.kubo.casabero.com"
       - "coolify.port=3000"
-      - "traefik.enable=true"
-      - "traefik.http.routers.kubo-backend.rule=Host(`api.kubo.casabero.com`)"
-      - "traefik.http.routers.kubo-backend.entrypoints=websecure"
-      - "traefik.http.routers.kubo-backend.tls=true"
-      - "traefik.http.routers.kubo-backend.tls.certresolver=letsencrypt"
 
-  db:
-    image: postgres:15-alpine
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     restart: always
-    environment:
-      - POSTGRES_USER=kubouser
-      - POSTGRES_PASSWORD=kubopass
-      - POSTGRES_DB=kubodb
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U kubouser -d kubodb" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    volumes:
-      - /home/casabero/data/kubo/postgres:/var/lib/postgresql/data
+    depends_on:
+      - backend
     networks:
       - kubo-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:80/" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    labels:
+      - "coolify.fqdn=https://kubo.casabero.com"
+      - "coolify.port=80"
 
 networks:
   kubo-network:
