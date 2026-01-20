@@ -23,8 +23,8 @@ RUN npm run build
 # Production stage
 FROM node:20-alpine
 
-# Install system dependencies for Prisma
-RUN apk add --no-cache openssl libc6-compat
+# Install system dependencies for Prisma and Healthchecks
+RUN apk add --no-cache openssl libc6-compat curl
 
 WORKDIR /app
 
