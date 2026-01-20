@@ -11,13 +11,6 @@ services:
     labels:
       - "coolify.fqdn=https://kubo.casabero.com"
       - "coolify.port=80"
-      - "traefik.enable=true"
-      - "traefik.http.routers.kubo-frontend.rule=Host(`kubo.casabero.com`)"
-      - "traefik.http.routers.kubo-frontend.entrypoints=websecure"
-      - "traefik.http.routers.kubo-frontend.tls=true"
-      - "traefik.http.routers.kubo-frontend.priority=1000"
-      - "traefik.http.routers.kubo-frontend.service=kubo-frontend-svc"
-      - "traefik.http.services.kubo-frontend-svc.loadbalancer.server.port=80"
 
   backend:
     build:
@@ -35,13 +28,6 @@ services:
     labels:
       - "coolify.fqdn=https://api.kubo.casabero.com"
       - "coolify.port=3000"
-      - "traefik.enable=true"
-      - "traefik.http.routers.kubo-backend.rule=Host(`api.kubo.casabero.com`)"
-      - "traefik.http.routers.kubo-backend.entrypoints=websecure"
-      - "traefik.http.routers.kubo-backend.tls=true"
-      - "traefik.http.routers.kubo-backend.priority=1"
-      - "traefik.http.routers.kubo-backend.service=kubo-backend-svc"
-      - "traefik.http.services.kubo-backend-svc.loadbalancer.server.port=3000"
 
   db:
     image: postgres:15-alpine
