@@ -36,10 +36,14 @@ services:
       retries: 5
       start_period: 20s
     labels:
-      - "coolify.fqdn=http://api.kubo.casabero.com"
+      - "coolify.fqdn=https://api.kubo.casabero.com"
       - "coolify.port=3000"
-      - "caddy_ingress_network=coolify"
       - "traefik.enable=true"
+      - "traefik.http.routers.kubo-backend.rule=Host(`api.kubo.casabero.com`)"
+      - "traefik.http.routers.kubo-backend.entrypoints=websecure"
+      - "traefik.http.routers.kubo-backend.tls=true"
+      - "traefik.http.routers.kubo-backend.tls.certresolver=letsencrypt"
+      - "caddy_ingress_network=coolify"
 
   frontend:
     build:
@@ -57,10 +61,14 @@ services:
       retries: 5
       start_period: 20s
     labels:
-      - "coolify.fqdn=http://kubo.casabero.com"
+      - "coolify.fqdn=https://kubo.casabero.com"
       - "coolify.port=80"
-      - "caddy_ingress_network=coolify"
       - "traefik.enable=true"
+      - "traefik.http.routers.kubo-frontend.rule=Host(`kubo.casabero.com`)"
+      - "traefik.http.routers.kubo-frontend.entrypoints=websecure"
+      - "traefik.http.routers.kubo-frontend.tls=true"
+      - "traefik.http.routers.kubo-frontend.tls.certresolver=letsencrypt"
+      - "caddy_ingress_network=coolify"
 
 networks:
   kubo-network:
