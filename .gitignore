@@ -30,4 +30,4 @@ Thumbs.db
 *.sublime-workspace
 
 # Docker
-.dockerignore
+
