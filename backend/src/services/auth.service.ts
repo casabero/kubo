@@ -1,6 +1,6 @@
 import { PrismaClient, Role } from '@prisma/client';
 import bcrypt from 'bcryptjs';
-import { generateAccessToken, generateRefreshToken } from '../utils/jwt.utils';
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../utils/jwt.utils';
 
 const prisma = new PrismaClient();
 
@@ -33,8 +33,20 @@ export class AuthService {
     }
 
     static async refresh(token: string) {
-        // Logic to verify refresh token and generate new tokens
-        // In a real app, you'd check a whitelist/blacklist of refresh tokens
-        return { accessToken: generateAccessToken({}), refreshToken: generateRefreshToken({}) };
+        try {
+            const decoded = verifyRefreshToken(token) as any;
+            const user = await prisma.user.findUnique({ where: { id: decoded.userId } });
+
+            if (!user) {
+                throw new Error('User not found');
+            }
+
+            const accessToken = generateAccessToken({ userId: user.id, role: user.role });
+            const refreshToken = generateRefreshToken({ userId: user.id });
+
+            return { accessToken, refreshToken };
+        } catch (error) {
+            throw new Error('Invalid refresh token');
+        }
     }
 }
