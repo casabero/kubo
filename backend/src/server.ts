@@ -4,6 +4,8 @@ import logger from './logger';
 import { z } from 'zod';
 import * as math from 'mathjs';
 import authRoutes from './routes/auth.routes';
+import courseRoutes from './routes/course.routes';
+import groupRoutes from './routes/group.routes';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -24,8 +26,10 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(cookieParser());
 
-// Auth routes
+// Routes
 app.use('/auth', authRoutes);
+app.use('/courses', courseRoutes);
+app.use('/groups', groupRoutes);
 
 // Identify backend
 app.get('/', (req: Request, res: Response) => {
