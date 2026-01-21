@@ -7,7 +7,7 @@ services:
       - POSTGRES_PASSWORD=kubopass
       - POSTGRES_DB=kubodb
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U kubouser -d kubodb" ]
+      test: ["CMD-SHELL", "pg_isready -U kubouser -d kubodb"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -30,18 +30,18 @@ services:
     networks:
       - kubo-network
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:3000/health" ]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 20s
       timeout: 10s
       retries: 3
       start_period: 30s
     labels:
-      - "coolify.fqdn=http://api.kubo.casabero.com"
+      - "coolify.fqdn=http://api-kubo.casabero.com"
       - "coolify.port=3000"
       - "traefik.enable=true"
-      - "traefik.http.routers.kubo-backend.rule=Host(`api.kubo.casabero.com`)"
+      - "traefik.http.routers.kubo-backend.rule=Host(`api-kubo.casabero.com`)"
       - "traefik.http.services.kubo-backend.loadbalancer.server.port=3000"
-      - "caddy=api.kubo.casabero.com"
+      - "caddy=api-kubo.casabero.com"
       - "caddy.reverse_proxy={{upstreams 3000}}"
       - "caddy_ingress_network=coolify"
 
@@ -55,7 +55,7 @@ services:
     networks:
       - kubo-network
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:80/" ]
+      test: ["CMD", "curl", "-f", "http://localhost:80/"]
       interval: 20s
       timeout: 10s
       retries: 3
