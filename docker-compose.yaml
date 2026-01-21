@@ -35,8 +35,8 @@ services:
       timeout: 5s
       retries: 3
     labels:
-      - "coolify.fqdn=https://api.kubo.casabero.com"
-      - "coolify.port=3000"
+      - "caddy=api.kubo.casabero.com"
+      - "caddy.reverse_proxy={{upstreams 3000}}"
 
   frontend:
     build:
@@ -53,8 +53,8 @@ services:
       timeout: 5s
       retries: 3
     labels:
-      - "coolify.fqdn=https://kubo.casabero.com"
-      - "coolify.port=80"
+      - "caddy=kubo.casabero.com"
+      - "caddy.reverse_proxy={{upstreams 80}}"
 
 networks:
   kubo-network:
