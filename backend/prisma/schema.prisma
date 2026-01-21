@@ -134,6 +134,7 @@ model Question {
   content            String
   type               String  // e.g., MULTIPLE_CHOICE, OPEN
   options            Json?   // JSON for options
+  correctAnswer      String?
   irtDifficulty      Float   @default(0.0)
   irtDiscrimination Float   @default(1.0)
   skillId            String
@@ -156,7 +157,8 @@ model AssessmentSession {
   id               String     @id @default(uuid())
   startTime        DateTime   @default(now())
   endTime          DateTime?
-  estimatedAbility Float      @default(0.0) // theta (IRT)
+  currentTheta     Float      @default(0.0) // theta (IRT)
+  isCompleted      Boolean    @default(false)
   studentId        String
   student          User       @relation(fields: [studentId], references: [id])
   assessmentId     String
@@ -169,7 +171,7 @@ model Response {
   id        String   @id @default(uuid())
   isCorrect Boolean
   timeSpent Int      // in seconds
-  hintsUsed Int      @default(0)
+  hintsUsed Json?
   sessionId String
   session   AssessmentSession @relation(fields: [sessionId], references: [id])
   questionId String
@@ -185,5 +187,13 @@ model StudentSkillMastery {
   masteryProbability Float    @default(0.0) // BKT mastery probability
   nextReview         DateTime // SM2 next review date
   
-  @@unique([studentId, skillId])
+
+  @@index([studentId, skillId])
+}
+
+model AICache {
+  id        String   @id @default(uuid())
+  promptHash String   @unique
+  response   String
+  createdAt  DateTime @default(now())
 }
