@@ -188,6 +188,7 @@ model StudentSkillMastery {
   nextReview         DateTime // SM2 next review date
   
 
+  @@unique([studentId, skillId])
   @@index([studentId, skillId])
 }
 
