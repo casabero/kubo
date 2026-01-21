@@ -31,10 +31,14 @@ services:
       - kubo-network
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:3000/health" ]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
     labels:
+      - "coolify.fqdn=http://api.kubo.casabero.com"
+      - "coolify.port=3000"
+      - "traefik.enable=true"
       - "caddy=api.kubo.casabero.com"
       - "caddy.reverse_proxy={{upstreams 3000}}"
 
@@ -49,10 +53,14 @@ services:
       - kubo-network
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:80/" ]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
     labels:
+      - "coolify.fqdn=http://kubo.casabero.com"
+      - "coolify.port=80"
+      - "traefik.enable=true"
       - "caddy=kubo.casabero.com"
       - "caddy.reverse_proxy={{upstreams 80}}"
 
