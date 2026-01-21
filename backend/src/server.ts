@@ -6,6 +6,7 @@ import * as math from 'mathjs';
 import authRoutes from './routes/auth.routes';
 import courseRoutes from './routes/course.routes';
 import groupRoutes from './routes/group.routes';
+import examRoutes from './routes/exam.routes';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -30,6 +31,7 @@ app.use(cookieParser());
 app.use('/auth', authRoutes);
 app.use('/courses', courseRoutes);
 app.use('/groups', groupRoutes);
+app.use('/exams', examRoutes);
 
 // Identify backend
 app.get('/', (req: Request, res: Response) => {
