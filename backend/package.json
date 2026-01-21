@@ -35,6 +35,6 @@
     "@types/jest": "^29.5.11"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "node dist/prisma/seed.js"
   }
 }
