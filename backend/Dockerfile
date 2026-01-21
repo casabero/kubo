@@ -20,7 +20,7 @@ RUN npx prisma generate
 # Build
 RUN npm run build
 # Compile seed script separately
-RUN npx tsc prisma/seed.ts --outDir dist/prisma --esModuleInterop
+RUN npx tsc prisma/seed.ts --outDir dist/prisma --esModuleInterop --skipLibCheck
 
 # Production stage
 FROM node:20-alpine
