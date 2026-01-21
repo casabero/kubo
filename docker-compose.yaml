@@ -38,9 +38,8 @@ services:
     labels:
       - "coolify.fqdn=http://api.kubo.casabero.com"
       - "coolify.port=3000"
+      - "caddy_ingress_network=coolify"
       - "traefik.enable=true"
-      - "caddy=api.kubo.casabero.com"
-      - "caddy.reverse_proxy={{upstreams 3000}}"
 
   frontend:
     build:
@@ -60,9 +59,8 @@ services:
     labels:
       - "coolify.fqdn=http://kubo.casabero.com"
       - "coolify.port=80"
+      - "caddy_ingress_network=coolify"
       - "traefik.enable=true"
-      - "caddy=kubo.casabero.com"
-      - "caddy.reverse_proxy={{upstreams 80}}"
 
 networks:
   kubo-network:

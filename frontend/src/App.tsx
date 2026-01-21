@@ -19,8 +19,8 @@ function App() {
                 <div className="flex justify-between items-center">
                     <h1 className="text-4xl font-bold tracking-tight">KuboApps</h1>
                     <span className={`text-[10px] px-2 py-1 border ${backendStatus === 'online' ? 'border-green-500 text-green-500' :
-                            backendStatus === 'offline' ? 'border-red-500 text-red-500' :
-                                'border-sti-border text-sti-text opacity-40'
+                        backendStatus === 'offline' ? 'border-red-500 text-red-500' :
+                            'border-sti-border text-sti-text opacity-40'
                         }`}>
                         API: {backendStatus.toUpperCase()}
                     </span>
@@ -43,11 +43,13 @@ function App() {
                     <div className="space-y-4">
                         <div className="flex justify-between items-center text-sm">
                             <span className="opacity-60">Backend Status:</span>
-                            <span className="font-mono text-green-600">CONNECTED</span>
+                            <span className={`font-mono ${backendStatus === 'online' ? 'text-green-600' : 'text-red-600'}`}>
+                                {backendStatus === 'checking' ? 'CHECKING...' : backendStatus.toUpperCase()}
+                            </span>
                         </div>
                         <div className="flex justify-between items-center text-sm">
                             <span className="opacity-60">Latency:</span>
-                            <span className="font-mono">12ms</span>
+                            <span className="font-mono">{backendStatus === 'online' ? '12ms' : '--'}</span>
                         </div>
                         <Button variant="secondary" className="w-full">Refresh Metrics</Button>
                     </div>
